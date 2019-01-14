@@ -12,3 +12,4 @@ Labyrinth/Content/StarterContent/
 # VS Generated Files #
 ######################
 *.VC.db
+*.ipch
