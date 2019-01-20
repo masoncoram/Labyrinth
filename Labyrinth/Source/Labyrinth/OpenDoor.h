@@ -9,8 +9,12 @@
 #include "Engine/World.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/PlayerController.h"
+#include "Components/PrimitiveComponent.h"
+
 #include "OpenDoor.generated.h"
 
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDoorEvent);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class LABYRINTH_API UOpenDoor : public UActorComponent
@@ -25,22 +29,34 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	void OpenDoor();
 	void CloseDoor();
 
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	// Returns total mass in kg
+	float GetTotalMassOfActorsOnPlate();
 
-private:
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(BlueprintAssignable)
+		FDoorEvent OnOpen;
+
+	UPROPERTY(BlueprintAssignable)
+		FDoorEvent OnClose;
+
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float OpenAngle = -280.0f;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float CloseAngle = -180.0f;
 
+private:
+
 	UPROPERTY(EditAnywhere)
-	ATriggerVolume* PressurePlate;
+		float TriggerMass = 5.f;
+
+	UPROPERTY(EditAnywhere)
+	ATriggerVolume* PressurePlate = nullptr;
 
 	UPROPERTY(EditAnywhere)
 	bool IsOpenTrigger;
@@ -48,13 +64,6 @@ private:
 	UPROPERTY(EditAnywhere)
 	bool IsCloseTrigger;
 
-
-	UPROPERTY(EditAnywhere)
-	float DoorCloseDelay = 1.0f;
-
-	float LastDoorOpenTime;
-
-	AActor* ActorThatOpens; //Pawn inherits from actor
-	AActor* DoorOwner;
+	AActor* DoorOwner = nullptr;
 		
 };
