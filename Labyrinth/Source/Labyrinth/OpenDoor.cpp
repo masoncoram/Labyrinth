@@ -2,6 +2,8 @@
 
 #include "OpenDoor.h"
 
+#define OUT
+
 // Sets default values for this component's properties
 UOpenDoor::UOpenDoor()
 {
@@ -18,23 +20,14 @@ void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();
-
 	// Find the owning Actor
 	DoorOwner = GetOwner();
 
-}
+	if (!PressurePlate) { 
+		UE_LOG(LogTemp, Error, TEXT("%s missing pressure plate TriggerVolume"), *(DoorOwner->GetName())); 
+	}
 
-void UOpenDoor::OpenDoor()
-{
-	// Set the door rotation
-	DoorOwner->SetActorRotation(FRotator(0.0f, OpenAngle, 0.0f));
-}
 
-void UOpenDoor::CloseDoor()
-{
-	// Set the door rotation
-	DoorOwner->SetActorRotation(FRotator(0.0f, CloseAngle, 0.0f));
 }
 
 
@@ -44,20 +37,36 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
-	// If the ActorThatOpens is in the volume
-	// then open the door
-	if (IsOpenTrigger && PressurePlate->IsOverlappingActor(ActorThatOpens)) {
-		OpenDoor();
-		LastDoorOpenTime = GetWorld()->GetTimeSeconds();
-	}
-	if (IsCloseTrigger && PressurePlate->IsOverlappingActor(ActorThatOpens)) {
-		CloseDoor();
+	// Poll the Trigger Volume
+	// 
+	if (GetTotalMassOfActorsOnPlate() >= TriggerMass)
+	{
+		OnOpen.Broadcast();
+		UE_LOG(LogTemp, Warning, TEXT("Mass threshold met"));
 	}
 
 	// Check if it's time to close the door
-	if (LastDoorOpenTime + DoorCloseDelay < GetWorld()->GetTimeSeconds()) {
-		CloseDoor();
+	else {
+		OnClose.Broadcast();
 	}
 
+}
+
+float UOpenDoor::GetTotalMassOfActorsOnPlate() {
+
+	float TotalMass = 0.f;
+
+	// Find all the overlapping actors
+	TArray<AActor*> OverlappingActors;
+	if (!PressurePlate) { return TotalMass; }
+	PressurePlate->GetOverlappingActors(OUT OverlappingActors);
+
+	// Iterate through them to add mass
+	for (const AActor* Actor : OverlappingActors) {
+		TotalMass += Actor->FindComponentByClass<UPrimitiveComponent>()->GetMass();
+		UE_LOG(LogTemp, Warning, TEXT("%s on pressure plate"), *(Actor->GetName()));
+	}
+
+	return TotalMass;
 }
 
