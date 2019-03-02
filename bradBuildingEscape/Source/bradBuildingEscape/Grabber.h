@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
+#include "Components/InputComponent.h"
 #include "Grabber.generated.h"
 
 
@@ -24,9 +26,33 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+
+	// returns current Start of line trace
+	FVector GetLineTraceStart();
+
+	// returns current end of line trace
+	FVector GetLineTraceEnd();
+
 private:
 	// how far ahead of the player can we reach in centimeters
 	float Reach = 110.0f;
-		
+
+	UPhysicsHandleComponent* PhysicsHandle = nullptr;
+
+	UInputComponent* InputComponent = nullptr;
+
+	// ray cast and grab whats in reach
+	void GrabItem();
 	
+	// release item grabbed in GrabItem()
+	void ReleaseItem();
+
+	// find it 
+	void FindPhysicsHandleComponent();
+
+	// setup (assumed) input component
+	void SetupInputComponent();
+
+	// return hit for first physics body in reach
+	const FHitResult GetFirstPhysicsBodyInReach();
 };

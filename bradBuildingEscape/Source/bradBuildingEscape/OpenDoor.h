@@ -7,6 +7,8 @@
 #include "Engine/TriggerVolume.h"
 #include "OpenDoor.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDoorEvent);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BRADBUILDINGESCAPE_API UOpenDoor : public UActorComponent
 {
@@ -20,29 +22,26 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	void OpenDoor();
-	void CloseDoor();
-
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	UPROPERTY(BlueprintAssignable)
+	FDoorEvent OnOpenRequest;
+
+	UPROPERTY(BlueprintAssignable)
+	FDoorEvent OnCloseRequest;
 		
 private:
 	UPROPERTY(EditAnywhere)
-	float OpenAngle = 90.0f;
-	UPROPERTY(EditAnywhere)
-	float CloseAngle = 0.0f;
+	ATriggerVolume* PressurePlate = nullptr;
 
 	UPROPERTY(EditAnywhere)
-	ATriggerVolume* PressurePlate;
+	AActor* Owner = nullptr; // the owning door
 
 	UPROPERTY(EditAnywhere)
-	float DoorCloseDelay = 1.0f;
-	
-	float LastDoorOpenTime;
+	float TriggerMass = 30.0f; // mass required to trigger the door
 
-	UPROPERTY(EditAnywhere)
-    AActor* ActorThatOpens; // Remember pawn inherits from actor
-	AActor* Owner; // the owning door
+	// calc mass on pressure plate
+	float GetTotalMassOfActorsOnPlate();
 };
