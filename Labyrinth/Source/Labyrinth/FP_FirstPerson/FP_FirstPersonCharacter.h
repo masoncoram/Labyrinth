@@ -17,13 +17,7 @@ class AFP_FirstPersonCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-	/** Pawn mesh: 1st person view (arms; seen only by self) */
-	UPROPERTY(VisibleDefaultsOnly, Category=Mesh)
-	USkeletalMeshComponent* Mesh1P;
-
-	/** Gun mesh */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	USkeletalMeshComponent* FP_Gun;
+	
 
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -31,6 +25,19 @@ class AFP_FirstPersonCharacter : public ACharacter
 
 public:
 	AFP_FirstPersonCharacter();
+
+
+	/** Pawn mesh: 1st person view (arms; seen only by self)
+	* Now seen by blueprint
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Mesh)
+	USkeletalMeshComponent* Mesh1P;
+
+	/** Gun mesh */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Mesh)
+	USkeletalMeshComponent* FP_Gun;
+
+
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
