@@ -6,11 +6,14 @@
 */DerivedDataCache
 */Intermediate/
 */Saved
-Labyrinth/Content/StarterContent/
+*.tmp
 Labyrinth/Content/GoodSky/*
 Labyrinth/Content/InfinityBladeGrassLands/*
 Labyrinth/Content/KiteDemo/*
+Labyrinth/Content/MultistoryDungeons/*
 Labyrinth/Content/ProceduralNaturePack/*
+Labyrinth/Content/Rodents/*
+Labyrinth/Content/StarterContent/
 bradBuildingEscape/Content/StarterContent/
 
 ######################
