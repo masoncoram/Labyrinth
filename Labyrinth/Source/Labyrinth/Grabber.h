@@ -21,6 +21,11 @@ class LABYRINTH_API UGrabber : public UActorComponent
 	GENERATED_BODY()
 
 public:	
+
+	// How far ahead of the player we can reach in cm
+	UPROPERTY(EditAnywhere)
+	float Reach = 100.f;
+
 	// Sets default values for this component's properties
 	UGrabber();
 
@@ -34,8 +39,6 @@ public:
 
 
 private:
-	// How far ahead of the player we can reach in cm
-	float Reach = 100.f;
 
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 
