@@ -24,7 +24,7 @@ public:
 
 	// How far ahead of the player we can reach in cm
 	UPROPERTY(EditAnywhere)
-	float Reach = 100.f;
+	float Reach = 125.f;
 
 	// Sets default values for this component's properties
 	UGrabber();

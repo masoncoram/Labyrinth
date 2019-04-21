@@ -45,7 +45,7 @@ void UGrabber::SetupInputComponent()
 	if (InputComponent) {
 		UE_LOG(LogTemp, Warning, TEXT("Input component found"));
 		/// Bind the input axis
-		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+		InputComponent->BindAction("Grab", IE_Pressed,  this, &UGrabber::Grab);
 		InputComponent->BindAction("Grab", IE_Released, this, &UGrabber::Release);
 	}
 	else {
